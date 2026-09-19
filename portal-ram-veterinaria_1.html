@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Veterinário de Resistência aos Antimicrobianos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f6ef;
+    --bg-panel:#ffffff;
+    --ink:#1b241f;
+    --ink-soft:#4c574f;
+    --green:#2f5233;
+    --green-deep:#1e3722;
+    --green-pale:#e6ebe1;
+    --amber:#c07a2b;
+    --amber-pale:#f3e4cf;
+    --blue:#3f5f6a;
+    --blue-pale:#e4edef;
+    --line:#d9ddce;
+    --radius:4px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Source Serif 4', serif;
+    color:var(--green-deep);
+    margin:0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;}
+  img,svg{display:block;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+  ::selection{background:var(--green); color:#fff;}
+  :focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+
+  /* ---------- Nav ---------- */
+  header.topbar{
+    position:sticky; top:0; z-index:50;
+    background:rgba(245,246,239,0.94);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 32px; max-width:1120px; margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand svg{width:26px; height:26px;}
+  .brand-text{font-family:'Source Serif 4', serif; font-weight:600; font-size:17px; color:var(--green-deep);}
+  .brand-text span{display:block; font-family:'IBM Plex Sans',sans-serif; font-weight:400; font-size:11px; color:var(--ink-soft); letter-spacing:0.02em;}
+  nav.mainnav{display:flex; gap:28px;}
+  nav.mainnav a{
+    font-size:14px; text-decoration:none; color:var(--ink-soft);
+    border-bottom:2px solid transparent; padding-bottom:3px;
+    transition:color .15s, border-color .15s;
+  }
+  nav.mainnav a:hover{color:var(--green-deep); border-color:var(--amber);}
+  .navtoggle{display:none;}
+
+  /* ---------- Section shell ---------- */
+  section{padding:76px 0; border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:grid; grid-template-columns:64px 1fr; gap:24px; margin-bottom:44px;
+  }
+  .section-num{
+    font-family:'Source Serif 4', serif; font-size:28px; color:var(--amber);
+    line-height:1;
+  }
+  .section-head h2{font-size:30px;}
+  .section-kicker{font-size:14px; color:var(--ink-soft); margin-top:6px; max-width:60ch;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-top:56px;}
+  .hero-grid{display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:start;}
+  .hero h1{font-size:44px; line-height:1.12; max-width:16ch;}
+  .hero-lede{margin-top:20px; font-size:16.5px; color:var(--ink-soft); max-width:58ch;}
+  .hero-tags{display:flex; gap:10px; margin-top:26px; flex-wrap:wrap;}
+  .tag{
+    font-size:12.5px; padding:5px 11px; border-radius:100px;
+    border:1px solid var(--green); color:var(--green-deep);
+  }
+  .one-health{
+    margin-top:34px; display:flex; align-items:center; gap:18px;
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px;
+  }
+  .one-health svg{width:52px; height:52px; flex-shrink:0;}
+  .one-health p{margin:0; font-size:13.5px; color:var(--ink-soft);}
+  .one-health strong{color:var(--green-deep); font-family:'Source Serif 4',serif; font-weight:600; display:block; margin-bottom:3px; font-size:15px;}
+
+  .side-panel{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px 26px 22px;
+  }
+  .side-panel + .side-panel{margin-top:20px;}
+  .panel-title{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:13px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft);
+    margin-bottom:16px; font-weight:600;
+  }
+  .panel-title small{text-transform:none; letter-spacing:0; font-weight:400; color:#8b9086;}
+
+  .bar-row{margin-bottom:14px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-label{display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:5px; color:var(--ink);}
+  .bar-label b{font-family:'IBM Plex Sans',sans-serif; font-weight:600;}
+  .bar-track{height:8px; background:var(--green-pale); border-radius:100px; overflow:hidden;}
+  .bar-fill{height:100%; background:var(--green); border-radius:100px;}
+  .bar-fill.amber{background:var(--amber);}
+  .bar-fill.blue{background:var(--blue);}
+  .bar-src{font-size:11px; color:#8b9086; margin-top:12px;}
+
+  .news-list{list-style:none; margin:0; padding:0;}
+  .news-list li{
+    display:flex; gap:14px; padding:11px 0; border-top:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .news-list li:first-child{border-top:none;}
+  .news-date{color:var(--amber); font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums; font-size:12.5px; padding-top:1px;}
+
+  /* ---------- Painel epidemiológico ---------- */
+  .epi-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+  .epi-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:28px 28px 24px;}
+  .epi-card-head{display:flex; align-items:center; gap:12px; margin-bottom:20px;}
+  .epi-card-head svg{width:28px; height:28px;}
+  .epi-card-head h3{font-size:19px;}
+  .epi-row{
+    display:grid; grid-template-columns:1.5fr 1.2fr 60px; gap:12px; align-items:center;
+    padding:12px 0; border-top:1px solid var(--line); font-size:13px;
+  }
+  .epi-card .epi-row:first-of-type{border-top:none;}
+  .epi-species{font-weight:600;}
+  .epi-species small{display:block; font-weight:400; color:var(--ink-soft); font-style:italic;}
+  .epi-pct{text-align:right; font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; color:var(--green-deep);}
+  .epi-note{font-size:12px; color:#8b9086; margin-top:16px;}
+
+  /* ---------- Repositório ---------- */
+  .repo-list{display:flex; flex-direction:column;}
+  .repo-item{
+    display:grid; grid-template-columns:100px 1fr 140px; gap:20px; align-items:start;
+    padding:22px 0; border-top:1px solid var(--line);
+  }
+  .repo-list .repo-item:first-child{border-top:none;}
+  .repo-year{font-family:'Source Serif 4',serif; font-size:24px; color:var(--amber);}
+  .repo-title{font-size:15.5px; font-weight:600; margin-bottom:4px;}
+  .repo-meta{font-size:12.5px; color:var(--ink-soft);}
+  .repo-region{
+    justify-self:end; font-size:11.5px; padding:4px 10px; border-radius:100px;
+    background:var(--blue-pale); color:var(--blue); height:fit-content; white-space:nowrap;
+  }
+  .official-links{
+    margin-top:36px; padding-top:30px; border-top:1px solid var(--line);
+  }
+  .official-links-label{font-size:13px; color:var(--ink-soft); margin-bottom:16px;}
+  .link-row{display:flex; gap:12px; flex-wrap:wrap;}
+  .link-chip{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--green); color:var(--green-deep); text-decoration:none;
+    padding:9px 16px; border-radius:100px; font-size:13.5px; font-weight:500;
+    transition:background .15s, color .15s;
+  }
+  .link-chip:hover{background:var(--green); color:#fff;}
+  .link-chip svg{width:14px; height:14px;}
+
+  /* ---------- Conscientização ---------- */
+  .aware-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+  .aware-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:28px;}
+  .aware-card h3{font-size:19px; margin-bottom:4px;}
+  .aware-card .aware-sub{font-size:13px; color:var(--ink-soft); margin-bottom:20px;}
+  .doc-item{
+    display:flex; gap:14px; align-items:flex-start;
+    padding:14px 0; border-top:1px solid var(--line);
+  }
+  .aware-card .doc-item:first-of-type{border-top:none;}
+  .doc-item svg{width:22px; height:22px; flex-shrink:0; margin-top:2px;}
+  .doc-item-title{font-size:14px; font-weight:600;}
+  .doc-item-type{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+
+  /* ---------- Contato ---------- */
+  .contact-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px;}
+  .form-mock{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:30px;}
+  .form-row{margin-bottom:16px;}
+  .form-row label{display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;}
+  .form-row .fake-input{
+    border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px;
+    background:#fbfbf7; color:#9aa091; font-size:13.5px;
+  }
+  .form-row .fake-input.tall{min-height:70px;}
+  .form-note{font-size:11.5px; color:#9aa091; margin-top:14px;}
+  .btn-mock{
+    display:inline-block; margin-top:6px; background:var(--green); color:#fff;
+    border:none; padding:12px 22px; border-radius:var(--radius); font-size:14px;
+    font-weight:600; font-family:'IBM Plex Sans',sans-serif;
+  }
+  .team-list{display:flex; flex-direction:column; gap:14px;}
+  .team-item{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .team-role{font-size:14px; font-weight:600;}
+  .team-count{font-size:12px; color:var(--ink-soft);}
+
+  footer{padding:34px 0 46px;}
+  .footer-inner{display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:var(--ink-soft); flex-wrap:wrap; gap:10px;}
+
+  @media (max-width: 860px){
+    nav.mainnav{display:none;}
+    .hero-grid, .epi-grid, .aware-grid, .contact-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:32px; max-width:none;}
+    .section-head{grid-template-columns:40px 1fr;}
+    .repo-item{grid-template-columns:1fr; gap:6px;}
+    .repo-region{justify-self:start;}
+    .wrap{padding:0 20px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 21c-4-2.5-8-6-8-10.5A5.5 5.5 0 0 1 9.5 5c1 0 1.9.35 2.5 1 .6-.65 1.5-1 2.5-1A5.5 5.5 0 0 1 20 10.5C20 15 16 18.5 12 21Z" stroke="#2f5233" stroke-width="1.4"/><path d="M8.5 11.2c1.2-1.6 5.8-1.6 7 0" stroke="#c07a2b" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <div class="brand-text">PVRAM<span>Portal Veterinário de Resistência aos Antimicrobianos</span></div>
+    </div>
+    <nav class="mainnav">
+      <a href="#home">Início</a>
+      <a href="#painel">Painel</a>
+      <a href="#repositorio">Repositório</a>
+      <a href="#consciencia">Conscientização</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HOME ================= -->
+<section id="home" class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Resistência aos antimicrobianos, traduzida para quem está na ponta do cuidado</h1>
+      <p class="hero-lede">Reunimos dados epidemiológicos, artigos científicos nacionais e materiais práticos de prescrição em um só lugar, para aproximar a pesquisa em Saúde Única da rotina de clínicas, hospitais veterinários e propriedades rurais.</p>
+      <div class="hero-tags">
+        <span class="tag">Projeto de extensão</span>
+        <span class="tag">Saúde Única · One Health</span>
+        <span class="tag">Dado aberto</span>
+      </div>
+      <div class="one-health">
+        <svg viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="16" r="9" stroke="#2f5233" stroke-width="1.6"/>
+          <circle cx="16" cy="44" r="9" stroke="#c07a2b" stroke-width="1.6"/>
+          <circle cx="48" cy="44" r="9" stroke="#3f5f6a" stroke-width="1.6"/>
+          <path d="M27 22 21 37M37 22 43 37M25 44H39" stroke="#8b9086" stroke-width="1.2"/>
+        </svg>
+        <p><strong>Sobre o projeto — Saúde Única</strong>Saúde animal, humana e ambiental são tratadas como uma coisa só: dado de resistência bacteriana em cães, gatos e animais de produção também é dado de saúde pública.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="side-panel">
+        <div class="panel-title">Painel de dados locais <small>projeto-piloto</small></div>
+        <div class="bar-row">
+          <div class="bar-label"><span><i>E. coli</i> em cães · ampicilina</span><b>62%</b></div>
+          <div class="bar-track"><div class="bar-fill" style="width:62%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span><i>S. pseudintermedius</i> em gatos · clindamicina</span><b>38%</b></div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:38%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span><i>Salmonella</i> spp. em produção · tetraciclina</span><b>55%</b></div>
+          <div class="bar-track"><div class="bar-fill amber" style="width:55%"></div></div>
+        </div>
+        <p class="bar-src">Base: isolados do Hospital Veterinário parceiro, últimos 12 meses · amostra piloto</p>
+      </div>
+
+      <div class="side-panel">
+        <div class="panel-title">Novidades e avisos</div>
+        <ul class="news-list">
+          <li><span class="news-date">SET/26</span><span>MAPA atualiza lista de antimicrobianos de uso restrito em animais de produção.</span></li>
+          <li><span class="news-date">AGO/26</span><span>Novo boletim do PAN-BR Agro traz dados por região sobre mastite bovina.</span></li>
+          <li><span class="news-date">JUL/26</span><span>Portal abre chamada para envio de artigos e casos clínicos da comunidade.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAINEL EPIDEMIOLÓGICO ================= -->
+<section id="painel">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">02</div>
+      <div>
+        <h2>Painel epidemiológico</h2>
+        <p class="section-kicker">Perfis de resistência organizados por espécie e finalidade — atualizados conforme novos lotes de antibiograma são processados.</p>
+      </div>
+    </div>
+
+    <div class="epi-grid">
+      <div class="epi-card">
+        <div class="epi-card-head">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 20c0-5 3-9 8-9s8 4 8 9" stroke="#2f5233" stroke-width="1.5"/><circle cx="12" cy="7" r="3.4" stroke="#2f5233" stroke-width="1.5"/></svg>
+          <h3>Pequenos animais</h3>
+        </div>
+        <div class="epi-row">
+          <div class="epi-species">Infecção urinária<small>E. coli · cães</small></div>
+          <div class="bar-track"><div class="bar-fill" style="width:62%"></div></div>
+          <div class="epi-pct">62%</div>
+        </div>
+        <div class="epi-row">
+          <div class="epi-species">Piodermite<small>S. pseudintermedius · cães</small></div>
+          <div class="bar-track"><div class="bar-fill" style="width:41%"></div></div>
+          <div class="epi-pct">41%</div>
+        </div>
+        <div class="epi-row">
+          <div class="epi-species">Infecção respiratória<small>Pasteurella spp. · gatos</small></div>
+          <div class="bar-track"><div class="bar-fill" style="width:27%"></div></div>
+          <div class="epi-pct">27%</div>
+        </div>
+        <p class="epi-note">Resistência a pelo menos um antimicrobiano de primeira linha, por síndrome clínica.</p>
+      </div>
+
+      <div class="epi-card">
+        <div class="epi-card-head">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 15c2-6 14-6 16 0" stroke="#2f5233" stroke-width="1.5"/><circle cx="8" cy="17" r="2" stroke="#2f5233" stroke-width="1.5"/><circle cx="16" cy="17" r="2" stroke="#2f5233" stroke-width="1.5"/></svg>
+          <h3>Animais de produção</h3>
+        </div>
+        <div class="epi-row">
+          <div class="epi-species">Mastite clínica<small>S. aureus · bovinos leiteiros</small></div>
+          <div class="bar-track"><div class="bar-fill amber" style="width:48%"></div></div>
+          <div class="epi-pct">48%</div>
+        </div>
+        <div class="epi-row">
+          <div class="epi-species">Enterite<small>Salmonella spp. · suínos</small></div>
+          <div class="bar-track"><div class="bar-fill amber" style="width:55%"></div></div>
+          <div class="epi-pct">55%</div>
+        </div>
+        <div class="epi-row">
+          <div class="epi-species">Colibacilose<small>E. coli · aves</small></div>
+          <div class="bar-track"><div class="bar-fill amber" style="width:34%"></div></div>
+          <div class="epi-pct">34%</div>
+        </div>
+        <p class="epi-note">Resistência a antimicrobianos de uso corrente na cadeia produtiva regional.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REPOSITÓRIO CIENTÍFICO ================= -->
+<section id="repositorio">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">03</div>
+      <div>
+        <h2>Repositório científico</h2>
+        <p class="section-kicker">Resumos de produção nacional em linguagem direta, com link para o artigo original — e os canais oficiais que orientam a vigilância no país.</p>
+      </div>
+    </div>
+
+    <div class="repo-list">
+      <div class="repo-item">
+        <div class="repo-year">2025</div>
+        <div>
+          <div class="repo-title">Perfil de resistência de Escherichia coli em cães atendidos em hospital-escola do Sul do Brasil</div>
+          <div class="repo-meta">Anais de evento em Medicina Veterinária · resumo de 4 parágrafos</div>
+        </div>
+        <div class="repo-region">Região Sul</div>
+      </div>
+      <div class="repo-item">
+        <div class="repo-year">2024</div>
+        <div>
+          <div class="repo-title">Staphylococcus aureus resistente à meticilina em mastite bovina: revisão de casos</div>
+          <div class="repo-meta">Revista de Ciências Veterinárias · resumo de 4 parágrafos</div>
+        </div>
+        <div class="repo-region">Multirregional</div>
+      </div>
+      <div class="repo-item">
+        <div class="repo-year">2024</div>
+        <div>
+          <div class="repo-title">Uso de antimicrobianos em avicultura de corte e pressão seletiva sobre Salmonella spp.</div>
+          <div class="repo-meta">Programa de pós-graduação em Zootecnia · resumo de 4 parágrafos</div>
+        </div>
+        <div class="repo-region">Região Sudeste</div>
+      </div>
+    </div>
+
+    <div class="official-links">
+      <p class="official-links-label">Canais oficiais e programas de vigilância</p>
+      <div class="link-row">
+        <a class="link-chip" href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6z" stroke="currentColor" stroke-width="1.6"/></svg>PAN-BR Agro</a>
+        <a class="link-chip" href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6z" stroke="currentColor" stroke-width="1.6"/></svg>MAPA</a>
+        <a class="link-chip" href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6z" stroke="currentColor" stroke-width="1.6"/></svg>Anvisa</a>
+        <a class="link-chip" href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6z" stroke="currentColor" stroke-width="1.6"/></svg>WOAH</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONSCIENTIZAÇÃO & GUIAS ================= -->
+<section id="consciencia">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">04</div>
+      <div>
+        <h2>Conscientização &amp; guias</h2>
+        <p class="section-kicker">Extensão de fato: material pensado para quem prescreve e para quem cuida do animal no dia a dia.</p>
+      </div>
+    </div>
+
+    <div class="aware-grid">
+      <div class="aware-card">
+        <h3>Para médicos veterinários</h3>
+        <p class="aware-sub">Manuais e protocolos de prescrição racional</p>
+        <div class="doc-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l3 3v15H6z" stroke="#2f5233" stroke-width="1.4"/><path d="M9 11h6M9 15h6" stroke="#2f5233" stroke-width="1.4"/></svg>
+          <div><div class="doc-item-title">Guia de prescrição racional em pequenos animais</div><div class="doc-item-type">PDF · 12 páginas</div></div>
+        </div>
+        <div class="doc-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l3 3v15H6z" stroke="#2f5233" stroke-width="1.4"/><path d="M9 11h6M9 15h6" stroke="#2f5233" stroke-width="1.4"/></svg>
+          <div><div class="doc-item-title">Protocolo de coleta para antibiograma em bovinos</div><div class="doc-item-type">PDF · 6 páginas</div></div>
+        </div>
+        <div class="doc-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l3 3v15H6z" stroke="#2f5233" stroke-width="1.4"/><path d="M9 11h6M9 15h6" stroke="#2f5233" stroke-width="1.4"/></svg>
+          <div><div class="doc-item-title">Checklist rápido: quando pedir cultura antes de prescrever</div><div class="doc-item-type">PDF · 2 páginas</div></div>
+        </div>
+      </div>
+
+      <div class="aware-card">
+        <h3>Para tutores e produtores</h3>
+        <p class="aware-sub">Infográficos em linguagem simples</p>
+        <div class="doc-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="1.5" stroke="#c07a2b" stroke-width="1.4"/><path d="M8 14l3-3 2 2 3-4" stroke="#c07a2b" stroke-width="1.4"/></svg>
+          <div><div class="doc-item-title">Por que terminar o tratamento até o fim</div><div class="doc-item-type">Infográfico · 1 página</div></div>
+        </div>
+        <div class="doc-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="1.5" stroke="#c07a2b" stroke-width="1.4"/><path d="M8 14l3-3 2 2 3-4" stroke="#c07a2b" stroke-width="1.4"/></svg>
+          <div><div class="doc-item-title">Uso correto de antibióticos na criação animal</div><div class="doc-item-type">Infográfico · 1 página</div></div>
+        </div>
+        <div class="doc-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="1.5" stroke="#c07a2b" stroke-width="1.4"/><path d="M8 14l3-3 2 2 3-4" stroke="#c07a2b" stroke-width="1.4"/></svg>
+          <div><div class="doc-item-title">Sinais de que o animal precisa voltar ao veterinário</div><div class="doc-item-type">Infográfico · 1 página</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTATO ================= -->
+<section id="contato">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-num">05</div>
+      <div>
+        <h2>Contato &amp; colaboração</h2>
+        <p class="section-kicker">O portal cresce com quem usa. Envie um trabalho para avaliação ou conheça a equipe por trás do projeto.</p>
+      </div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="form-mock">
+        <div class="form-row"><label>Nome</label><div class="fake-input">Ex.: Maria Fernandes</div></div>
+        <div class="form-row"><label>E-mail</label><div class="fake-input">Ex.: maria@email.com</div></div>
+        <div class="form-row"><label>Título do trabalho</label><div class="fake-input">Ex.: Resistência antimicrobiana em felinos domésticos</div></div>
+        <div class="form-row"><label>Arquivo (PDF)</label><div class="fake-input">Selecionar arquivo…</div></div>
+        <div class="form-row"><label>Mensagem</label><div class="fake-input tall">Escreva um resumo curto do trabalho…</div></div>
+        <button class="btn-mock" type="button">Enviar para avaliação</button>
+        <p class="form-note">Esboço visual — envio ainda não conectado a um formulário real.</p>
+      </div>
+
+      <div class="team-list">
+        <div class="team-item"><span class="team-role">Coordenação do projeto</span><span class="team-count">1 docente</span></div>
+        <div class="team-item"><span class="team-role">Equipe discente extensionista</span><span class="team-count">a definir</span></div>
+        <div class="team-item"><span class="team-role">Colaboração técnica</span><span class="team-count">Hospital Veterinário parceiro</span></div>
+        <div class="team-item"><span class="team-role">Revisão científica</span><span class="team-count">a definir</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>Portal Veterinário de Resistência aos Antimicrobianos — protótipo visual para apresentação da proposta de extensão.</span>
+    <span>Saúde Única · Saúde Animal · Saúde Humana · Meio Ambiente</span>
+  </div>
+</footer>
+
+</body>
+</html>
